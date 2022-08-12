@@ -3,7 +3,7 @@
 require 'securerandom'
 require 'sqlite3'
 
-$db = SQLite3::Database.new("game.db")
+$db = SQLite3::Database.new("db/game.db")
 $db.results_as_hash = true
 
 # Create a table
