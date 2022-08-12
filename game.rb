@@ -56,6 +56,14 @@ class Card
     @card_id = SecureRandom.uuid
   end
 
+  def Card.all
+    rows = $db.execute <<-SQL
+      SELECT * FROM cards;
+    SQL
+    puts rows
+    return rows;
+  end
+
   def Card.load(id)
     rows = $db.execute <<-SQL
       SELECT * FROM cards WHERE id = #{id};
