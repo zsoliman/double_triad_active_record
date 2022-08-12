@@ -4,6 +4,7 @@ require 'securerandom'
 require 'sqlite3'
 
 $db = SQLite3::Database.new("game.db")
+$db.results_as_hash = true
 
 # Create a table
 $db.execute <<-SQL
@@ -43,7 +44,7 @@ end
 # In order to save this information we would need to create a Cards table in a database
 # when we create a card object, we would store that card object in the database
 class Card
-  attr_accessor :name, :top, :left, :bottom, :right, :element, :img
+  attr_accessor :name, :top, :left, :bottom, :right, :element, :img, :card_id
   def initialize(name, top, left, bottom, right, element=nil, img=nil)
     @name = name
     @top = top
@@ -53,6 +54,25 @@ class Card
     @element = element
     @img = img
     @card_id = SecureRandom.uuid
+  end
+
+  def Card.load(id)
+    rows = $db.execute <<-SQL
+      SELECT * FROM cards WHERE id = #{id};
+    SQL
+    # rebuild a card object using data from database
+    result = rows.first
+    card = Card.new(
+      result['name'],
+      result['top'],
+      result['left'],
+      result['bottom'],
+      result['right'],
+      result['element'],
+      result['img']
+    )
+    card.card_id = result['card_id']
+    card
   end
 
   def save
