@@ -8,7 +8,7 @@ $db = SQLite3::Database.new("game.db")
 # Create a table
 $db.execute <<-SQL
   create table if not exists players(
-    id PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name varchar(255),
     email varchar(255),
     password varchar(255)
@@ -17,7 +17,7 @@ SQL
 
 $db.execute <<-SQL
   create table if not exists cards(
-    id PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name varchar(255),
     top int,
     left int,
@@ -64,5 +64,7 @@ class Card
   end
 end
 
-@card = Card.new('Bahamut', 9, 6, 6, 8)
-@card.save
+# @card1 = Card.new('Yojimbo', 9, 7, 6, 8)
+# @card2 = Card.new('Tonberry', 3, 5, 2, 7)
+# @card1.save
+# @card2.save
