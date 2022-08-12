@@ -3,11 +3,11 @@
 require 'securerandom'
 require 'sqlite3'
 
-db = SQLite3::Database.new("game.db")
+$db = SQLite3::Database.new("game.db")
 
 # Create a table
-db.execute <<-SQL
-  create table players(
+$db.execute <<-SQL
+  create table if not exists players(
     id PRIMARY KEY,
     name varchar(255),
     email varchar(255),
@@ -15,8 +15,8 @@ db.execute <<-SQL
   );
 SQL
 
-db.execute <<-SQL
-  create table cards(
+$db.execute <<-SQL
+  create table if not exists cards(
     id PRIMARY KEY,
     name varchar(255),
     top int,
@@ -53,6 +53,16 @@ class Card
     @element = element
     @img = img
     @card_id = SecureRandom.uuid
-    @owner = owner
+  end
+
+  def save
+    $db.execute <<-SQL
+      INSERT INTO cards(name, top, left, bottom, right)
+      VALUES ("#{@name}", "#{@top}", "#{@left}", "#{@bottom}", "#{@right}");
+    SQL
+    puts "#{@name}-#{@card_id} saved to the database!"
   end
 end
+
+@card = Card.new('Bahamut', 9, 6, 6, 8)
+@card.save
